@@ -1,31 +1,31 @@
-name: CE
-
-on: {push}
-
+name: CI
+ 
+on: [push]
+ 
 jobs:
-  test_scan:
+  sast_scan:
     name: Run Bandit Scan
     runs-on: ubuntu-latest
-
+ 
     steps:
-    - name Checkout Code
-      uses: actions/checkout@v2
-
+    - name: Checkout Code
+      uses: actions/checkout@v4
+ 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: 3.8
-
-      - name: Install Bandit
-        run pip install bandit 
-
-      - name: Run Bandit Scan
-        run:bandit -li -li -r . -f json -o bandit-report.json
-
-      -name: Ipload Artefact
-       uses: actions/upload-artifact@v4
-       if: always()
-       with:
-         name: bandit-findings
-         path: bandit-report.json
-        
+ 
+    - name: Install Bandit
+      run: pip install bandit
+ 
+    - name: Run Bandit Scan
+      run: bandit -ii -ll -r . -f json -o bandit-report.json
+ 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: bandit-findings
+        path: bandit-report.json
+ 
